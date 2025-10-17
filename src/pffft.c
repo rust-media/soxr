@@ -157,7 +157,7 @@ typedef __m128 v4sf;
 /*
   ARM NEON support macros
 */
-#elif !defined(PFFFT_SIMD_DISABLE) && defined(__arm__)
+#elif !defined(PFFFT_SIMD_DISABLE) && (defined(__arm__) || defined(_M_ARM) || defined(__aarch64__) || defined(_M_ARM64))
 #  include <arm_neon.h>
 typedef float32x4_t v4sf;
 #  define SIMD_SZ 4
@@ -1732,7 +1732,7 @@ void pffft_zconvolve_accumulate(PFFFT_Setup *s, const float *a, const float *b, 
   const v4sf * RESTRICT vb = (const v4sf*)b;
   v4sf * RESTRICT vab = (v4sf*)ab;
 
-#ifdef __arm__
+#if defined(__GNUC__) && (defined(__arm__) || defined(__aarch64__))
   __builtin_prefetch(va);
   __builtin_prefetch(vb);
   __builtin_prefetch(vab);
